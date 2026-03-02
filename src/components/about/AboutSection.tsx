@@ -1,5 +1,6 @@
 import { useRef, useEffect, useState } from 'react';
 import { motion, useInView } from 'framer-motion';
+import ScrollReveal from '../shared/ScrollReveal';
 
 // Shuffle text animation hook
 function useShuffleText(text: string, trigger: boolean) {
@@ -41,9 +42,45 @@ export default function AboutSection() {
       id="about"
       ref={sectionRef}
       className="section"
-      style={{ paddingTop: '10rem', paddingBottom: '10rem' }}
+      style={{ paddingTop: '8rem', paddingBottom: '10rem' }}
     >
       <div style={{ maxWidth: '900px', margin: '0 auto' }}>
+
+        {/* === Identity block: Name + Title ABOVE about content === */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-80px' }}
+          transition={{ duration: 0.7 }}
+          style={{ marginBottom: '4rem' }}
+        >
+          <h1
+            style={{
+              fontFamily: 'var(--font-serif)',
+              fontWeight: 700,
+              fontSize: 'clamp(2.8rem, 7vw, 6rem)',
+              color: 'var(--text-primary)',
+              letterSpacing: '-0.02em',
+              lineHeight: 1,
+              marginBottom: '0.5rem',
+            }}
+          >
+            Karam Hittini
+          </h1>
+          <p
+            style={{
+              fontFamily: 'var(--font-sans)',
+              fontWeight: 400,
+              fontSize: '1rem',
+              color: 'var(--accent)',
+              letterSpacing: '0.18em',
+              textTransform: 'uppercase',
+            }}
+          >
+            Software Engineer
+          </p>
+        </motion.div>
+
         {/* Label */}
         <motion.p
           className="section-label"
@@ -55,9 +92,9 @@ export default function AboutSection() {
           About
         </motion.p>
 
-        {/* Heading */}
+        {/* Heading — slightly smaller (display-md instead of display-lg) */}
         <motion.h2
-          className="display-lg"
+          className="display-md"
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-80px' }}
@@ -70,28 +107,27 @@ export default function AboutSection() {
           <span style={{ color: 'var(--text-muted)' }}>.</span>
         </motion.h2>
 
-        {/* Bio */}
+        {/* Bio — ScrollReveal on all text */}
         <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
           viewport={{ once: true, margin: '-80px' }}
-          transition={{ duration: 0.7, delay: 0.2 }}
+          transition={{ duration: 0.4, delay: 0.1 }}
           style={{
             fontSize: '1.05rem',
-            lineHeight: 1.85,
+            lineHeight: 2,
             color: 'var(--text-secondary)',
             maxWidth: '600px',
             marginBottom: '3rem',
           }}
         >
-          I'm a software engineer passionate about crafting immersive digital experiences —
-          from AI-powered platforms that detect emotion in real time, to Unreal Engine games
-          that blur the line between story and fear. I care deeply about clean architecture,
-          thoughtful UI, and systems that perform beautifully under pressure.
-          <br /><br />
-          When I'm not shipping features, you'll find me exploring game design theory,
-          experimenting with generative AI, or overthinking whether that animation curve
-          should be 0.76 or 0.78.
+          <ScrollReveal delay={0.05}>
+            I'm a software engineer passionate about crafting immersive digital experiences — from AI-powered platforms that detect emotion in real time, to Unreal Engine games that blur the line between story and fear. I care deeply about clean architecture, thoughtful UI, and systems that perform beautifully under pressure.
+          </ScrollReveal>
+          <br />
+          <ScrollReveal delay={0.2}>
+            When I'm not shipping features, you'll find me exploring game design theory, experimenting with generative AI, or overthinking whether that animation curve should be 0.76 or 0.78.
+          </ScrollReveal>
         </motion.p>
 
         {/* Divider */}
@@ -108,7 +144,7 @@ export default function AboutSection() {
           }}
         />
 
-        {/* Quote */}
+        {/* Quote — no "Engineering Principle" attribution */}
         <motion.div
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
@@ -128,17 +164,6 @@ export default function AboutSection() {
             }}
           >
             {shuffledQuote}
-          </p>
-          <p
-            style={{
-              marginTop: '0.75rem',
-              fontSize: '0.78rem',
-              color: 'var(--text-muted)',
-              letterSpacing: '0.1em',
-              textTransform: 'uppercase',
-            }}
-          >
-            — Engineering Principle
           </p>
         </motion.div>
       </div>

@@ -1,15 +1,10 @@
 import { motion } from 'framer-motion';
-import { techStack } from '../../data/tech';
-
-const categoryColors: Record<string, string> = {
-  'Frontend': '#c8f04f',
-  'Backend & Systems': '#4fc8f0',
-  'Database': '#f04fc8',
-  'Tools': '#f0c84f',
-  'Practices': '#c84ff0',
-};
+import { techStack, techIcons } from '../../data/tech';
 
 export default function TechStackSection() {
+  // Flatten all tech items into one big grid
+  const allItems = techStack.flatMap((cat) => cat.items);
+
   return (
     <section
       id="tech"
@@ -17,6 +12,7 @@ export default function TechStackSection() {
       style={{ paddingTop: '8rem', paddingBottom: '8rem' }}
     >
       <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
+        {/* Section label */}
         <motion.p
           className="section-label"
           initial={{ opacity: 0, y: 20 }}
@@ -24,105 +20,97 @@ export default function TechStackSection() {
           viewport={{ once: true, margin: '-80px' }}
           transition={{ duration: 0.6 }}
         >
-          Tech Stack
+          Skills
         </motion.p>
+
+        {/* Heading: "The Magic Behind" */}
         <motion.h2
-          className="display-lg"
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-80px' }}
           transition={{ duration: 0.7, delay: 0.1 }}
-          style={{ marginBottom: '4rem' }}
+          style={{
+            marginBottom: '4rem',
+            fontFamily: 'var(--font-display)',
+            fontWeight: 700,
+            fontSize: 'clamp(2rem, 5vw, 4rem)',
+            letterSpacing: '-0.02em',
+            lineHeight: 1,
+            color: 'var(--text-primary)',
+          }}
         >
-          Tools of the trade
+          The Magic{' '}
+          <span
+            className="gradient-text-behind"
+            style={{
+              fontFamily: 'var(--font-serif)',
+              fontStyle: 'italic',
+              fontWeight: 700,
+            }}
+          >
+            Behind
+          </span>
         </motion.h2>
 
+        {/* Tech grid — icon + name cards */}
         <div
           style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
-            gap: '2rem',
+            gridTemplateColumns: 'repeat(auto-fill, minmax(130px, 1fr))',
+            gap: '1rem',
           }}
         >
-          {techStack.map((category, catIdx) => {
-            const color = categoryColors[category.label] ?? 'var(--accent)';
-            return (
-              <motion.div
-                key={category.label}
-                initial={{ opacity: 0, y: 40 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: '-60px' }}
-                transition={{ duration: 0.6, delay: catIdx * 0.08 }}
+          {allItems.map((item, i) => (
+            <motion.div
+              key={item.name}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-40px' }}
+              transition={{ duration: 0.5, delay: i * 0.04 }}
+              whileHover={{ y: -4, scale: 1.05 }}
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                gap: '0.7rem',
+                padding: '1.4rem 1rem',
+                background: 'var(--bg-glass)',
+                border: '1px solid var(--border-subtle)',
+                borderRadius: '14px',
+                backdropFilter: 'blur(10px)',
+                cursor: 'default',
+                transition: 'border-color 0.25s ease, box-shadow 0.25s ease',
+              }}
+              onMouseEnter={(e) => {
+                (e.currentTarget as HTMLDivElement).style.borderColor = `${item.color}50`;
+                (e.currentTarget as HTMLDivElement).style.boxShadow = `0 0 24px ${item.color}25`;
+              }}
+              onMouseLeave={(e) => {
+                (e.currentTarget as HTMLDivElement).style.borderColor = 'var(--border-subtle)';
+                (e.currentTarget as HTMLDivElement).style.boxShadow = 'none';
+              }}
+            >
+              {/* Icon */}
+              <div
+                style={{ width: 36, height: 36, flexShrink: 0 }}
+                dangerouslySetInnerHTML={{
+                  __html: techIcons[item.icon] ?? `<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="${item.color}"/></svg>`,
+                }}
+              />
+              {/* Name */}
+              <span
                 style={{
-                  background: 'var(--bg-glass)',
-                  border: '1px solid var(--border-subtle)',
-                  borderRadius: '16px',
-                  padding: '1.5rem',
-                  backdropFilter: 'blur(10px)',
+                  fontSize: '0.75rem',
+                  fontWeight: 600,
+                  color: 'var(--text-secondary)',
+                  textAlign: 'center',
+                  letterSpacing: '0.02em',
                 }}
               >
-                {/* Category header */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1.25rem' }}>
-                  <div
-                    style={{
-                      width: 6,
-                      height: 6,
-                      borderRadius: '50%',
-                      background: color,
-                      boxShadow: `0 0 8px ${color}`,
-                      flexShrink: 0,
-                    }}
-                  />
-                  <p
-                    style={{
-                      fontSize: '0.68rem',
-                      fontWeight: 600,
-                      letterSpacing: '0.15em',
-                      textTransform: 'uppercase',
-                      color: color,
-                    }}
-                  >
-                    {category.label}
-                  </p>
-                </div>
-
-                {/* Items */}
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
-                  {category.items.map((item, itemIdx) => (
-                    <motion.span
-                      key={item}
-                      initial={{ opacity: 0, scale: 0.85 }}
-                      whileInView={{ opacity: 1, scale: 1 }}
-                      viewport={{ once: true }}
-                      transition={{
-                        duration: 0.4,
-                        delay: catIdx * 0.06 + itemIdx * 0.04,
-                      }}
-                      whileHover={{
-                        color: color,
-                        borderColor: color,
-                        backgroundColor: `${color}15`,
-                        scale: 1.05,
-                      }}
-                      style={{
-                        display: 'inline-block',
-                        fontSize: '0.8rem',
-                        fontWeight: 500,
-                        color: 'var(--text-secondary)',
-                        border: '1px solid var(--border-subtle)',
-                        borderRadius: '8px',
-                        padding: '0.35rem 0.8rem',
-                        transition: 'all 0.2s ease',
-                        cursor: 'default',
-                      }}
-                    >
-                      {item}
-                    </motion.span>
-                  ))}
-                </div>
-              </motion.div>
-            );
-          })}
+                {item.name}
+              </span>
+            </motion.div>
+          ))}
         </div>
       </div>
     </section>

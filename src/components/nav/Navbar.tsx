@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const navLinks = [
@@ -9,14 +9,8 @@ const navLinks = [
 ];
 
 export default function Navbar() {
-  const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 80);
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
-  }, []);
+  const [hovered, setHovered] = useState(false);
 
   const handleNav = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     e.preventDefault();
@@ -27,131 +21,168 @@ export default function Navbar() {
     }
   };
 
+  const toggleMenu = () => setMenuOpen((o) => !o);
+
   return (
-    <motion.nav
-      initial={{ y: -60, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      transition={{ delay: 4.2, duration: 0.6, ease: 'easeOut' }}
-      style={{
-        position: 'fixed',
-        top: '1.5rem',
-        left: '50%',
-        transform: 'translateX(-50%)',
-        zIndex: 100,
-        width: 'min(700px, 90vw)',
-      }}
-    >
-      <div
-        className={`glass ${scrolled ? 'glass-strong' : ''}`}
+    <>
+      {/* Hamburger Button — fixed top-right */}
+      <motion.button
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 2.0, duration: 0.6 }}
+        onClick={toggleMenu}
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
+        aria-label="Toggle navigation"
         style={{
-          borderRadius: '100px',
-          padding: '0.7rem 2rem',
+          position: 'fixed',
+          top: '2rem',
+          right: '2.5rem',
+          zIndex: 200,
+          background: 'transparent',
+          border: 'none',
+          cursor: 'inherit',
+          width: 36,
+          height: 28,
           display: 'flex',
-          alignItems: 'center',
+          flexDirection: 'column',
           justifyContent: 'space-between',
-          transition: 'all 0.3s ease',
+          alignItems: 'flex-end',
+          padding: 0,
         }}
       >
-        {/* Logo */}
-        <a
-          href="#"
-          onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+        {/* Top line */}
+        <motion.span
+          animate={
+            menuOpen
+              ? { rotate: 45, y: 12, width: '100%' }
+              : hovered
+              ? { rotate: 0, y: 0, width: '100%' }
+              : { rotate: 0, y: 0, width: '100%' }
+          }
+          transition={{ duration: 0.35, ease: [0.76, 0, 0.24, 1] }}
           style={{
-            fontFamily: 'var(--font-display)',
-            fontWeight: 700,
-            fontSize: '1rem',
-            color: 'var(--text-primary)',
-            letterSpacing: '-0.02em',
+            display: 'block',
+            height: 2,
+            width: '100%',
+            borderRadius: 2,
+            background: 'var(--text-primary)',
+            transformOrigin: 'center',
           }}
-        >
-          KH<span style={{ color: 'var(--accent)' }}>.</span>
-        </a>
-
-        {/* Desktop Links */}
-        <div
+        />
+        {/* Middle line */}
+        <motion.span
+          animate={
+            menuOpen
+              ? { opacity: 0, x: -20 }
+              : hovered
+              ? { x: -12, opacity: 1 }
+              : { x: 0, opacity: 1 }
+          }
+          transition={{ duration: 0.35, ease: [0.76, 0, 0.24, 1] }}
           style={{
-            display: 'flex',
-            gap: '2rem',
-            alignItems: 'center',
-          }}
-          className="hidden md:flex"
-        >
-          {navLinks.map((link) => (
-            <a
-              key={link.href}
-              href={link.href}
-              onClick={(e) => handleNav(e, link.href)}
-              style={{
-                fontSize: '0.82rem',
-                fontWeight: 500,
-                color: 'var(--text-secondary)',
-                letterSpacing: '0.02em',
-                transition: 'color 0.2s ease',
-              }}
-              onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--text-primary)')}
-              onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--text-secondary)')}
-            >
-              {link.label}
-            </a>
-          ))}
-        </div>
-
-        {/* CTA */}
-        <a
-          href="#contact"
-          onClick={(e) => handleNav(e, '#contact')}
-          style={{
-            fontSize: '0.78rem',
-            fontWeight: 600,
-            color: 'var(--bg-base)',
+            display: 'block',
+            height: 2,
+            width: '70%',
+            borderRadius: 2,
             background: 'var(--accent)',
-            padding: '0.45rem 1.1rem',
-            borderRadius: '100px',
-            letterSpacing: '0.02em',
-            transition: 'opacity 0.2s ease',
           }}
-          onMouseEnter={(e) => (e.currentTarget.style.opacity = '0.85')}
-          onMouseLeave={(e) => (e.currentTarget.style.opacity = '1')}
-        >
-          Hire Me
-        </a>
-      </div>
+        />
+        {/* Bottom line */}
+        <motion.span
+          animate={
+            menuOpen
+              ? { rotate: -45, y: -12, width: '100%' }
+              : hovered
+              ? { rotate: 0, y: 0, width: '100%' }
+              : { rotate: 0, y: 0, width: '85%' }
+          }
+          transition={{ duration: 0.35, ease: [0.76, 0, 0.24, 1] }}
+          style={{
+            display: 'block',
+            height: 2,
+            width: '85%',
+            borderRadius: 2,
+            background: 'var(--text-primary)',
+            transformOrigin: 'center',
+          }}
+        />
+      </motion.button>
 
-      {/* Mobile Menu */}
+      {/* Full-screen overlay menu */}
       <AnimatePresence>
         {menuOpen && (
           <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            className="glass"
+            initial={{ clipPath: 'inset(0% 0% 100% 100%)', opacity: 0 }}
+            animate={{ clipPath: 'inset(0% 0% 0% 0%)', opacity: 1 }}
+            exit={{ clipPath: 'inset(0% 0% 100% 100%)', opacity: 0 }}
+            transition={{ duration: 0.5, ease: [0.76, 0, 0.24, 1] }}
             style={{
-              marginTop: '0.5rem',
-              borderRadius: '16px',
-              padding: '1rem',
+              position: 'fixed',
+              inset: 0,
+              zIndex: 150,
+              background: 'rgba(13, 13, 13, 0.97)',
+              backdropFilter: 'blur(20px)',
               display: 'flex',
               flexDirection: 'column',
-              gap: '0.75rem',
+              alignItems: 'flex-end',
+              justifyContent: 'center',
+              paddingRight: '8rem',
+              paddingBottom: '4rem',
             }}
           >
-            {navLinks.map((link) => (
-              <a
-                key={link.href}
-                href={link.href}
-                onClick={(e) => handleNav(e, link.href)}
-                style={{
-                  fontSize: '0.9rem',
-                  fontWeight: 500,
-                  color: 'var(--text-secondary)',
-                  padding: '0.4rem 0',
-                }}
-              >
-                {link.label}
-              </a>
-            ))}
+            <nav>
+              {navLinks.map((link, i) => (
+                <motion.div
+                  key={link.href}
+                  initial={{ opacity: 0, x: 60 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: 40 }}
+                  transition={{ duration: 0.4, delay: 0.1 + i * 0.07, ease: [0.76, 0, 0.24, 1] }}
+                >
+                  <a
+                    href={link.href}
+                    onClick={(e) => handleNav(e, link.href)}
+                    style={{
+                      display: 'block',
+                      fontFamily: 'var(--font-display)',
+                      fontSize: 'clamp(2.5rem, 6vw, 5rem)',
+                      fontWeight: 700,
+                      color: 'var(--text-primary)',
+                      letterSpacing: '-0.03em',
+                      lineHeight: 1.1,
+                      marginBottom: '0.4rem',
+                      transition: 'color 0.2s ease',
+                      textAlign: 'right',
+                    }}
+                    onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--accent)')}
+                    onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--text-primary)')}
+                  >
+                    {link.label}
+                  </a>
+                </motion.div>
+              ))}
+            </nav>
+
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.5 }}
+              style={{
+                position: 'absolute',
+                bottom: '3rem',
+                right: '8rem',
+                fontSize: '0.75rem',
+                color: 'var(--text-muted)',
+                letterSpacing: '0.1em',
+                textTransform: 'uppercase',
+              }}
+            >
+              Karam Hittini — Portfolio
+            </motion.p>
           </motion.div>
         )}
       </AnimatePresence>
-    </motion.nav>
+    </>
   );
 }

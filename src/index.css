@@ -1,23 +1,28 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Space+Grotesk:wght@300..700&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
 @import "tailwindcss";
+
 
 /* ===================================
    DESIGN TOKENS
    =================================== */
 :root {
-  --bg-base: #080808;
+  --bg-base: #0d0d0d;
   --bg-surface: rgba(255, 255, 255, 0.03);
-  --bg-glass: rgba(255, 255, 255, 0.05);
+  --bg-glass: rgba(255, 255, 255, 0.04);
   --border-subtle: rgba(255, 255, 255, 0.08);
-  --border-glass: rgba(255, 255, 255, 0.12);
+  --border-glass: rgba(255, 255, 255, 0.1);
   --text-primary: #f0f0f0;
   --text-secondary: #888;
   --text-muted: #444;
-  --accent: #c8f04f;
-  --accent-dim: rgba(200, 240, 79, 0.15);
-  --accent-glow: rgba(200, 240, 79, 0.25);
-  --gradient-hero: linear-gradient(135deg, #0a0a0a 0%, #111111 100%);
+  --accent: #8929FF;
+  --accent-2: #6E00CF;
+  --accent-3: #5100A3;
+  --accent-dim: rgba(137, 41, 255, 0.15);
+  --accent-glow: rgba(137, 41, 255, 0.3);
+  --gradient-hero: linear-gradient(135deg, #0d0d0d 0%, #120024 100%);
   --font-sans: "Inter", system-ui, sans-serif;
   --font-display: "Space Grotesk", system-ui, sans-serif;
+  --font-serif: "Playfair Display", Georgia, serif;
   --z-cursor: 9999;
   --z-nav: 100;
   --z-hero: 10;
@@ -45,7 +50,7 @@ body {
   color: var(--text-primary);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  cursor: none;
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cpath d='M5 2L27 14L17 16L12 27L5 2Z' fill='white' stroke='%23111' stroke-width='1.5' stroke-linejoin='round'/%3E%3C/svg%3E") 5 2, auto;
   overflow-x: hidden;
 }
 
@@ -75,7 +80,7 @@ button {
   top: 0;
   left: 0;
   height: 2px;
-  background: linear-gradient(to right, var(--accent), #7ef0c8);
+  background: linear-gradient(to right, var(--accent), #C084FC);
   z-index: 200;
   transform-origin: left;
   pointer-events: none;
@@ -92,10 +97,10 @@ button {
 }
 
 .glass-strong {
-  background: rgba(255, 255, 255, 0.07);
+  background: rgba(255, 255, 255, 0.06);
   backdrop-filter: blur(30px);
   -webkit-backdrop-filter: blur(30px);
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.12);
 }
 
 /* ===================================
@@ -117,10 +122,10 @@ button {
    TYPOGRAPHY
    =================================== */
 .display-xl {
-  font-family: var(--font-display);
+  font-family: var(--font-serif);
   font-size: clamp(3.5rem, 10vw, 9rem);
   font-weight: 700;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.02em;
   line-height: 0.95;
 }
 
@@ -130,6 +135,14 @@ button {
   font-weight: 700;
   letter-spacing: -0.02em;
   line-height: 1;
+}
+
+.display-md {
+  font-family: var(--font-display);
+  font-size: clamp(1.4rem, 3.5vw, 2.8rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
 }
 
 .section-label {
@@ -142,12 +155,20 @@ button {
 }
 
 /* ===================================
-   ACCENT GLOW TEXT
+   GRADIENT TEXT UTILITY
    =================================== */
-.glow-text {
-  text-shadow:
-    0 0 40px rgba(200, 240, 79, 0.4),
-    0 0 80px rgba(200, 240, 79, 0.15);
+.gradient-text-behind {
+  background: linear-gradient(90deg, #8929FF 0%, #C084FC 30%, #F97316 60%, #3B82F6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  background-size: 200% auto;
+  animation: gradientShift 4s linear infinite;
+}
+
+@keyframes gradientShift {
+  0% { background-position: 0% center; }
+  100% { background-position: 200% center; }
 }
 
 /* ===================================

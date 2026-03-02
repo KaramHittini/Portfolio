@@ -27,7 +27,7 @@ export default function SquareWipe({ onComplete }: { onComplete: () => void }) {
           style={{
             flex: 1,
             height: '100%',
-            backgroundColor: '#080808',
+            backgroundColor: '#0d0d0d',
             transformOrigin: 'top',
           }}
         />

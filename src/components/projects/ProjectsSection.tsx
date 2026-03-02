@@ -1,7 +1,7 @@
-import { useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { projects } from '../../data/projects';
 import ProjectCard from './ProjectCard';
+import { useRef, useEffect } from 'react';
 
 export default function ProjectsSection() {
   const trackRef = useRef<HTMLDivElement>(null);
@@ -18,14 +18,12 @@ export default function ProjectsSection() {
       const delta = currentY - lastScrollY;
       lastScrollY = currentY;
       scrollYRef.current = currentY;
-      // scrolling down → move cards to the right (+x), up → left
       velocityRef.current += delta * 0.8;
     };
 
     const animate = () => {
-      // Apply inertia
       xRef.current += velocityRef.current;
-      velocityRef.current *= 0.92; // damping
+      velocityRef.current *= 0.92;
 
       if (trackRef.current) {
         trackRef.current.style.transform = `translateX(${xRef.current}px)`;
@@ -62,7 +60,7 @@ export default function ProjectsSection() {
           viewport={{ once: true, margin: '-80px' }}
           transition={{ duration: 0.6 }}
         >
-          Selected Work
+          Projects
         </motion.p>
         <motion.h2
           className="display-lg"
@@ -71,17 +69,12 @@ export default function ProjectsSection() {
           viewport={{ once: true, margin: '-80px' }}
           transition={{ duration: 0.7, delay: 0.1 }}
         >
-          Projects
+          My Work
         </motion.h2>
       </div>
 
       {/* Scrolling track */}
-      <div
-        style={{
-          overflow: 'visible',
-          position: 'relative',
-        }}
-      >
+      <div style={{ overflow: 'visible', position: 'relative' }}>
         <div
           ref={trackRef}
           style={{
@@ -98,7 +91,6 @@ export default function ProjectsSection() {
               viewport={{ once: true, margin: '-100px' }}
               transition={{ duration: 0.7, delay: i * 0.12 }}
               style={{
-                // Slight vertical variation for organic feel
                 marginTop: i % 2 === 0 ? '0px' : '32px',
               }}
             >

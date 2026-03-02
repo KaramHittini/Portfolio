@@ -1,129 +1,148 @@
 import { useEffect, useRef } from 'react';
 
-interface Particle {
-  x: number;
-  y: number;
-  vx: number;
-  vy: number;
-  baseX: number;
-  baseY: number;
-  size: number;
-  opacity: number;
+// ReactBits Squares background — canvas-based animated grid
+// Grey background with slightly brighter square borders
+interface SquaresProps {
+  direction?: 'right' | 'left' | 'up' | 'down' | 'diagonal';
+  speed?: number;
+  borderColor?: string;
+  squareSize?: number;
+  hoverFillColor?: string;
 }
 
-export default function AntigravityBackground() {
+export default function SquaresBackground({
+  direction = 'diagonal',
+  speed = 0.4,
+  borderColor = '#2a2a2a',
+  squareSize = 44,
+  hoverFillColor = '#252525',
+}: SquaresProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const mouseRef = useRef({ x: -1000, y: -1000 });
-  const particlesRef = useRef<Particle[]>([]);
-  const rafRef = useRef<number>(0);
+  const requestRef = useRef<number>(0);
+  const numSquaresX = useRef(0);
+  const numSquaresY = useRef(0);
+  const gridOffset = useRef({ x: 0, y: 0 });
+  const hoveredSquare = useRef<{ x: number; y: number } | null>(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    const PARTICLE_COUNT = 120;
-    const REPEL_RADIUS = 100;
-    const REPEL_FORCE = 3;
-
-    const resize = () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-      initParticles();
+    const resizeCanvas = () => {
+      canvas.width = canvas.offsetWidth;
+      canvas.height = canvas.offsetHeight;
+      numSquaresX.current = Math.ceil(canvas.width / squareSize) + 1;
+      numSquaresY.current = Math.ceil(canvas.height / squareSize) + 1;
     };
 
-    const initParticles = () => {
-      particlesRef.current = Array.from({ length: PARTICLE_COUNT }, () => {
-        const x = Math.random() * canvas.width;
-        const y = Math.random() * canvas.height;
-        return {
-          x,
-          y,
-          vx: (Math.random() - 0.5) * 0.3,
-          vy: (Math.random() - 0.5) * 0.3,
-          baseX: x,
-          baseY: y,
-          size: Math.random() * 2 + 0.5,
-          opacity: Math.random() * 0.5 + 0.1,
-        };
-      });
-    };
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
 
-    const onMouseMove = (e: MouseEvent) => {
-      mouseRef.current = { x: e.clientX, y: e.clientY };
-    };
-
-    const draw = () => {
+    const drawGrid = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      const mouse = mouseRef.current;
 
-      particlesRef.current.forEach((p) => {
-        // Antigravity: repel from mouse
-        const dx = p.x - mouse.x;
-        const dy = p.y - mouse.y;
-        const dist = Math.sqrt(dx * dx + dy * dy);
+      const startX = Math.floor(gridOffset.current.x / squareSize) * squareSize;
+      const startY = Math.floor(gridOffset.current.y / squareSize) * squareSize;
 
-        if (dist < REPEL_RADIUS) {
-          const force = (REPEL_RADIUS - dist) / REPEL_RADIUS;
-          p.vx += (dx / dist) * force * REPEL_FORCE * 0.05;
-          p.vy += (dy / dist) * force * REPEL_FORCE * 0.05;
-        }
+      for (let x = startX; x < canvas.width + squareSize; x += squareSize) {
+        for (let y = startY; y < canvas.height + squareSize; y += squareSize) {
+          const squareX = x - (gridOffset.current.x % squareSize);
+          const squareY = y - (gridOffset.current.y % squareSize);
 
-        // Spring back to base position
-        const bx = p.baseX - p.x;
-        const by = p.baseY - p.y;
-        p.vx += bx * 0.003;
-        p.vy += by * 0.003;
-
-        // Damping
-        p.vx *= 0.95;
-        p.vy *= 0.95;
-
-        p.x += p.vx;
-        p.y += p.vy;
-
-        // Draw
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(200, 240, 79, ${p.opacity})`;
-        ctx.fill();
-      });
-
-      // Draw connection lines between nearby particles
-      for (let i = 0; i < particlesRef.current.length; i++) {
-        for (let j = i + 1; j < particlesRef.current.length; j++) {
-          const a = particlesRef.current[i];
-          const b = particlesRef.current[j];
-          const dx = a.x - b.x;
-          const dy = a.y - b.y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-          if (dist < 100) {
-            ctx.beginPath();
-            ctx.moveTo(a.x, a.y);
-            ctx.lineTo(b.x, b.y);
-            ctx.strokeStyle = `rgba(200, 240, 79, ${(1 - dist / 100) * 0.08})`;
-            ctx.lineWidth = 0.5;
-            ctx.stroke();
+          if (
+            hoveredSquare.current &&
+            Math.floor((x - startX) / squareSize) === hoveredSquare.current.x &&
+            Math.floor((y - startY) / squareSize) === hoveredSquare.current.y
+          ) {
+            ctx.fillStyle = hoverFillColor;
+            ctx.fillRect(squareX, squareY, squareSize, squareSize);
           }
+
+          ctx.strokeStyle = borderColor;
+          ctx.lineWidth = 0.5;
+          ctx.strokeRect(squareX, squareY, squareSize, squareSize);
         }
       }
 
-      rafRef.current = requestAnimationFrame(draw);
+      // Radial vignette to fade squares toward center
+      const gradient = ctx.createRadialGradient(
+        canvas.width / 2,
+        canvas.height / 2,
+        0,
+        canvas.width / 2,
+        canvas.height / 2,
+        Math.sqrt(canvas.width ** 2 + canvas.height ** 2) / 2
+      );
+      gradient.addColorStop(0, 'rgba(26, 26, 26, 0.7)');
+      gradient.addColorStop(0.5, 'rgba(26, 26, 26, 0.2)');
+      gradient.addColorStop(1, 'rgba(26, 26, 26, 0)');
+
+      ctx.fillStyle = gradient;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
     };
 
-    resize();
-    window.addEventListener('resize', resize);
-    window.addEventListener('mousemove', onMouseMove);
-    rafRef.current = requestAnimationFrame(draw);
+    const updateAnimation = () => {
+      const effectiveSpeed = Math.max(speed, 0.1);
+      switch (direction) {
+        case 'right':
+          gridOffset.current.x = (gridOffset.current.x - effectiveSpeed + squareSize) % squareSize;
+          break;
+        case 'left':
+          gridOffset.current.x = (gridOffset.current.x + effectiveSpeed + squareSize) % squareSize;
+          break;
+        case 'up':
+          gridOffset.current.y = (gridOffset.current.y + effectiveSpeed + squareSize) % squareSize;
+          break;
+        case 'down':
+          gridOffset.current.y = (gridOffset.current.y - effectiveSpeed + squareSize) % squareSize;
+          break;
+        case 'diagonal':
+          gridOffset.current.x = (gridOffset.current.x - effectiveSpeed + squareSize) % squareSize;
+          gridOffset.current.y = (gridOffset.current.y - effectiveSpeed + squareSize) % squareSize;
+          break;
+      }
+
+      drawGrid();
+      requestRef.current = requestAnimationFrame(updateAnimation);
+    };
+
+    const handleMouseMove = (event: MouseEvent) => {
+      const rect = canvas.getBoundingClientRect();
+      const mouseX = event.clientX - rect.left;
+      const mouseY = event.clientY - rect.top;
+
+      const startX = Math.floor(gridOffset.current.x / squareSize) * squareSize;
+      const startY = Math.floor(gridOffset.current.y / squareSize) * squareSize;
+
+      const hoveredSquareX = Math.floor((mouseX + gridOffset.current.x - startX) / squareSize);
+      const hoveredSquareY = Math.floor((mouseY + gridOffset.current.y - startY) / squareSize);
+
+      if (
+        !hoveredSquare.current ||
+        hoveredSquare.current.x !== hoveredSquareX ||
+        hoveredSquare.current.y !== hoveredSquareY
+      ) {
+        hoveredSquare.current = { x: hoveredSquareX, y: hoveredSquareY };
+      }
+    };
+
+    const handleMouseLeave = () => {
+      hoveredSquare.current = null;
+    };
+
+    canvas.addEventListener('mousemove', handleMouseMove);
+    canvas.addEventListener('mouseleave', handleMouseLeave);
+    requestRef.current = requestAnimationFrame(updateAnimation);
 
     return () => {
-      window.removeEventListener('resize', resize);
-      window.removeEventListener('mousemove', onMouseMove);
-      cancelAnimationFrame(rafRef.current);
+      window.removeEventListener('resize', resizeCanvas);
+      canvas.removeEventListener('mousemove', handleMouseMove);
+      canvas.removeEventListener('mouseleave', handleMouseLeave);
+      cancelAnimationFrame(requestRef.current);
     };
-  }, []);
+  }, [direction, speed, borderColor, squareSize, hoverFillColor]);
 
   return (
     <canvas
@@ -133,7 +152,8 @@ export default function AntigravityBackground() {
         inset: 0,
         width: '100%',
         height: '100%',
-        pointerEvents: 'none',
+        // Grey background
+        backgroundColor: '#1a1a1a',
       }}
     />
   );

@@ -7,8 +7,8 @@ export default function ContactSection() {
 
   const inputStyle = (field: string): React.CSSProperties => ({
     width: '100%',
-    background: focused === field ? 'rgba(200,240,79,0.04)' : 'rgba(255,255,255,0.03)',
-    border: `1px solid ${focused === field ? 'rgba(200,240,79,0.35)' : 'var(--border-subtle)'}`,
+    background: focused === field ? 'rgba(137,41,255,0.05)' : 'rgba(255,255,255,0.03)',
+    border: `1px solid ${focused === field ? 'rgba(137,41,255,0.4)' : 'var(--border-subtle)'}`,
     borderRadius: '12px',
     padding: '0.9rem 1.1rem',
     fontSize: '0.9rem',
@@ -39,31 +39,26 @@ export default function ContactSection() {
           transform: 'translate(-50%,-50%)',
           width: '600px',
           height: '400px',
-          background: 'radial-gradient(ellipse, rgba(200,240,79,0.06) 0%, transparent 70%)',
+          background: 'radial-gradient(ellipse, rgba(137,41,255,0.07) 0%, transparent 70%)',
           pointerEvents: 'none',
         }}
       />
 
       <div style={{ maxWidth: '640px', margin: '0 auto', position: 'relative', zIndex: 1 }}>
-        {/* Label */}
-        <motion.p
-          className="section-label"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-80px' }}
-          transition={{ duration: 0.6 }}
-        >
-          Get in Touch
-        </motion.p>
-
-        {/* Heading */}
+        {/* Heading — no label tag */}
         <motion.h2
-          className="display-lg"
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-80px' }}
-          transition={{ duration: 0.7, delay: 0.1 }}
-          style={{ marginBottom: '0.75rem' }}
+          transition={{ duration: 0.7 }}
+          style={{
+            fontFamily: 'var(--font-serif)',
+            fontWeight: 700,
+            fontSize: 'clamp(2rem, 5vw, 3.5rem)',
+            letterSpacing: '-0.02em',
+            marginBottom: '0.75rem',
+            color: 'var(--text-primary)',
+          }}
         >
           Let's Make It
           <br />
@@ -74,7 +69,7 @@ export default function ContactSection() {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-80px' }}
-          transition={{ duration: 0.6, delay: 0.2 }}
+          transition={{ duration: 0.6, delay: 0.15 }}
           style={{
             color: 'var(--text-secondary)',
             fontSize: '0.95rem',
@@ -91,12 +86,9 @@ export default function ContactSection() {
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-80px' }}
-          transition={{ duration: 0.7, delay: 0.3 }}
+          transition={{ duration: 0.7, delay: 0.25 }}
           className="glass"
-          style={{
-            borderRadius: '20px',
-            padding: '2rem',
-          }}
+          style={{ borderRadius: '20px', padding: '2rem' }}
         >
           <form
             onSubmit={(e) => e.preventDefault()}
@@ -180,21 +172,21 @@ export default function ContactSection() {
             <motion.button
               type="submit"
               whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
+              whileTap={{ scale: 0.97 }}
               style={{
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 gap: '0.5rem',
                 background: 'var(--accent)',
-                color: '#080808',
+                color: '#ffffff',
                 border: 'none',
                 borderRadius: '12px',
                 padding: '0.85rem',
                 fontSize: '0.9rem',
                 fontWeight: 700,
                 letterSpacing: '0.03em',
-                cursor: 'pointer',
+                cursor: 'inherit',
                 fontFamily: 'var(--font-sans)',
               }}
             >

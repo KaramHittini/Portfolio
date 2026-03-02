@@ -26,7 +26,7 @@ export default function ScrollProgress() {
         left: 0,
         width: 0,
         height: 2,
-        background: 'linear-gradient(to right, var(--accent), #7ef0c8)',
+        background: 'linear-gradient(to right, var(--accent), #C084FC)',
         zIndex: 200,
         pointerEvents: 'none',
         transition: 'width 0.05s linear',

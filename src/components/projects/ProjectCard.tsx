@@ -21,17 +21,17 @@ export default function ProjectCard({ project, index }: Props) {
         border: '1px solid var(--border-subtle)',
         cursor: 'pointer',
         background: '#0d0d0d',
-        boxShadow: '0 0 0 0 rgba(200, 240, 79, 0)',
+        boxShadow: '0 0 0 0 rgba(137, 41, 255, 0)',
         transition: 'box-shadow 0.3s ease, border-color 0.3s ease',
       }}
       onHoverStart={(e) => {
         const el = e.currentTarget as HTMLElement;
-        el.style.boxShadow = '0 0 40px -5px rgba(200, 240, 79, 0.2)';
-        el.style.borderColor = 'rgba(200, 240, 79, 0.25)';
+        el.style.boxShadow = '0 0 40px -5px rgba(137, 41, 255, 0.25)';
+        el.style.borderColor = 'rgba(137, 41, 255, 0.3)';
       }}
       onHoverEnd={(e) => {
         const el = e.currentTarget as HTMLElement;
-        el.style.boxShadow = '0 0 0 0 rgba(200, 240, 79, 0)';
+        el.style.boxShadow = '0 0 0 0 rgba(137, 41, 255, 0)';
         el.style.borderColor = 'var(--border-subtle)';
       }}
       data-cursor-hover
@@ -51,8 +51,8 @@ export default function ProjectCard({ project, index }: Props) {
             position: 'absolute',
             inset: 0,
             backgroundImage: `
-              linear-gradient(rgba(200,240,79,0.04) 1px, transparent 1px),
-              linear-gradient(90deg, rgba(200,240,79,0.04) 1px, transparent 1px)
+              linear-gradient(rgba(137,41,255,0.04) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(137,41,255,0.04) 1px, transparent 1px)
             `,
             backgroundSize: '40px 40px',
           }}
@@ -113,7 +113,7 @@ export default function ProjectCard({ project, index }: Props) {
                 fontWeight: 500,
                 color: 'var(--accent)',
                 background: 'var(--accent-dim)',
-                border: '1px solid rgba(200,240,79,0.15)',
+                border: '1px solid rgba(137,41,255,0.2)',
                 padding: '0.25rem 0.65rem',
                 borderRadius: '100px',
                 letterSpacing: '0.03em',

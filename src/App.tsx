@@ -1,5 +1,4 @@
 import './index.css';
-import CustomCursor from './components/cursor/CustomCursor';
 import ScrollProgress from './components/shared/ScrollProgress';
 import Navbar from './components/nav/Navbar';
 import HeroSection from './components/hero/HeroSection';
@@ -8,29 +7,39 @@ import ProjectsSection from './components/projects/ProjectsSection';
 import TechStackSection from './components/tech/TechStackSection';
 import ContactSection from './components/contact/ContactSection';
 import Footer from './components/shared/Footer';
+import SocialSidebar from './components/shared/SocialSidebar';
+import ClickSpark from './components/shared/ClickSpark';
+import { Analytics } from "@vercel/analytics/next"
 
 export default function App() {
   return (
-    <div style={{ backgroundColor: 'var(--bg-base)', minHeight: '100vh' }}>
-      {/* Global overlays */}
-      <CustomCursor />
-      <ScrollProgress />
+    <>
+      <Analytics/>
+      <ClickSpark sparkColor="var(--accent)" sparkCount={8} sparkRadius={22} sparkSize={11}>
+        <div style={{ backgroundColor: 'var(--bg-base)', minHeight: '100vh' }}>
+          {/* Global overlays */}
+          <ScrollProgress />
 
-      {/* Navigation */}
-      <Navbar />
+          {/* Fixed social sidebar — bottom left */}
+          <SocialSidebar />
 
-      {/* Hero — handles its own positioning during intro */}
-      <HeroSection />
+          {/* Navigation — hamburger top right */}
+          <Navbar />
 
-      {/* Main content */}
-      <main>
-        <AboutSection />
-        <ProjectsSection />
-        <TechStackSection />
-        <ContactSection />
-      </main>
+          {/* Hero — handles its own positioning during intro */}
+          <HeroSection />
 
-      <Footer />
-    </div>
+          {/* Main content */}
+          <main>
+            <AboutSection />
+            <ProjectsSection />
+            <TechStackSection />
+            <ContactSection />
+          </main>
+
+          <Footer />
+        </div>
+      </ClickSpark>
+    </>
   );
 }
