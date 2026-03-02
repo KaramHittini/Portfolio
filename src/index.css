@@ -1,0 +1,176 @@
+@import "tailwindcss";
+
+/* ===================================
+   DESIGN TOKENS
+   =================================== */
+:root {
+  --bg-base: #080808;
+  --bg-surface: rgba(255, 255, 255, 0.03);
+  --bg-glass: rgba(255, 255, 255, 0.05);
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-glass: rgba(255, 255, 255, 0.12);
+  --text-primary: #f0f0f0;
+  --text-secondary: #888;
+  --text-muted: #444;
+  --accent: #c8f04f;
+  --accent-dim: rgba(200, 240, 79, 0.15);
+  --accent-glow: rgba(200, 240, 79, 0.25);
+  --gradient-hero: linear-gradient(135deg, #0a0a0a 0%, #111111 100%);
+  --font-sans: "Inter", system-ui, sans-serif;
+  --font-display: "Space Grotesk", system-ui, sans-serif;
+  --z-cursor: 9999;
+  --z-nav: 100;
+  --z-hero: 10;
+}
+
+/* ===================================
+   RESET & BASE
+   =================================== */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  font-size: 16px;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--bg-base);
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  cursor: none;
+  overflow-x: hidden;
+}
+
+/* Show default cursor on mobile */
+@media (pointer: coarse) {
+  body {
+    cursor: auto;
+  }
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+input,
+textarea,
+button {
+  font-family: inherit;
+}
+
+/* ===================================
+   SCROLL PROGRESS BAR
+   =================================== */
+#scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 2px;
+  background: linear-gradient(to right, var(--accent), #7ef0c8);
+  z-index: 200;
+  transform-origin: left;
+  pointer-events: none;
+}
+
+/* ===================================
+   GLASSMORPHISM UTILITIES
+   =================================== */
+.glass {
+  background: var(--bg-glass);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--border-glass);
+}
+
+.glass-strong {
+  background: rgba(255, 255, 255, 0.07);
+  backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+/* ===================================
+   SECTION BASE
+   =================================== */
+.section {
+  min-height: 100vh;
+  padding: 8rem 6rem;
+  position: relative;
+}
+
+@media (max-width: 768px) {
+  .section {
+    padding: 6rem 1.5rem;
+  }
+}
+
+/* ===================================
+   TYPOGRAPHY
+   =================================== */
+.display-xl {
+  font-family: var(--font-display);
+  font-size: clamp(3.5rem, 10vw, 9rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 0.95;
+}
+
+.display-lg {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 5vw, 4rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+.section-label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 1.5rem;
+}
+
+/* ===================================
+   ACCENT GLOW TEXT
+   =================================== */
+.glow-text {
+  text-shadow:
+    0 0 40px rgba(200, 240, 79, 0.4),
+    0 0 80px rgba(200, 240, 79, 0.15);
+}
+
+/* ===================================
+   CUSTOM SCROLLBAR
+   =================================== */
+::-webkit-scrollbar {
+  width: 4px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-base);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--text-muted);
+  border-radius: 2px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent);
+}
+
+/* ===================================
+   SELECTION
+   =================================== */
+::selection {
+  background: var(--accent-dim);
+  color: var(--accent);
+}
