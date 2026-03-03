@@ -1,6 +1,5 @@
 import type { Project } from '../../data/projects';
 import { motion } from 'framer-motion';
-import { ExternalLink } from 'lucide-react';
 
 interface Props {
   project: Project;
@@ -8,7 +7,7 @@ interface Props {
 }
 
 export default function ProjectCard({ project, index }: Props) {
-  return (
+  const cardContent = (
     <motion.article
       whileHover={{ y: -8, scale: 1.01 }}
       transition={{ duration: 0.3, ease: 'easeOut' }}
@@ -19,7 +18,7 @@ export default function ProjectCard({ project, index }: Props) {
         borderRadius: '20px',
         overflow: 'hidden',
         border: '1px solid var(--border-subtle)',
-        cursor: 'pointer',
+        cursor: project.link ? 'pointer' : 'default',
         background: '#0d0d0d',
         boxShadow: '0 0 0 0 rgba(137, 41, 255, 0)',
         transition: 'box-shadow 0.3s ease, border-color 0.3s ease',
@@ -45,34 +44,69 @@ export default function ProjectCard({ project, index }: Props) {
           overflow: 'hidden',
         }}
       >
-        {/* Overlay grid */}
-        <div
-          style={{
-            position: 'absolute',
-            inset: 0,
-            backgroundImage: `
-              linear-gradient(rgba(137,41,255,0.04) 1px, transparent 1px),
-              linear-gradient(90deg, rgba(137,41,255,0.04) 1px, transparent 1px)
-            `,
-            backgroundSize: '40px 40px',
-          }}
-        />
-        {/* Number */}
-        <div
-          style={{
-            position: 'absolute',
-            bottom: '1rem',
-            right: '1.25rem',
-            fontFamily: 'var(--font-display)',
-            fontSize: '5rem',
-            fontWeight: 800,
-            color: 'rgba(255,255,255,0.06)',
-            lineHeight: 1,
-            userSelect: 'none',
-          }}
-        >
-          0{index + 1}
-        </div>
+        {/* Real project image if available */}
+        {project.image && (
+          <motion.img
+            src={project.image}
+            alt={project.title}
+            initial={{ scale: 1 }}
+            whileHover={{ scale: 1.04 }}
+            transition={{ duration: 0.4, ease: 'easeOut' }}
+            style={{
+              position: 'absolute',
+              inset: 0,
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+              opacity: 0.9,
+            }}
+          />
+        )}
+
+        {/* Overlay for gradient-image blend */}
+        {project.image && (
+          <div
+            style={{
+              position: 'absolute',
+              inset: 0,
+              background: 'linear-gradient(to bottom, transparent 60%, rgba(13,13,13,0.8) 100%)',
+            }}
+          />
+        )}
+
+        {/* Overlay grid (only when no image) */}
+        {!project.image && (
+          <div
+            style={{
+              position: 'absolute',
+              inset: 0,
+              backgroundImage: `
+                linear-gradient(rgba(137,41,255,0.04) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(137,41,255,0.04) 1px, transparent 1px)
+              `,
+              backgroundSize: '40px 40px',
+            }}
+          />
+        )}
+
+        {/* Number (only when no image) */}
+        {!project.image && (
+          <div
+            style={{
+              position: 'absolute',
+              bottom: '1rem',
+              right: '1.25rem',
+              fontFamily: 'var(--font-display)',
+              fontSize: '5rem',
+              fontWeight: 800,
+              color: 'rgba(255,255,255,0.06)',
+              lineHeight: 1,
+              userSelect: 'none',
+            }}
+          >
+            0{index + 1}
+          </div>
+        )}
       </div>
 
       {/* Content */}
@@ -89,7 +123,23 @@ export default function ProjectCard({ project, index }: Props) {
           >
             {project.title}
           </h3>
-          <ExternalLink size={16} style={{ color: 'var(--text-muted)', flexShrink: 0, marginTop: '2px' }} />
+          {project.link && (
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              style={{ color: 'var(--text-muted)', flexShrink: 0, marginTop: '2px' }}
+            >
+              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+              <polyline points="15 3 21 3 21 9" />
+              <line x1="10" y1="14" x2="21" y2="3" />
+            </svg>
+          )}
         </div>
 
         <p
@@ -126,4 +176,19 @@ export default function ProjectCard({ project, index }: Props) {
       </div>
     </motion.article>
   );
+
+  if (project.link) {
+    return (
+      <a
+        href={project.link}
+        target="_blank"
+        rel="noopener noreferrer"
+        style={{ display: 'block', textDecoration: 'none', cursor: 'inherit' }}
+      >
+        {cardContent}
+      </a>
+    );
+  }
+
+  return cardContent;
 }

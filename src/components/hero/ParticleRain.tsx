@@ -36,7 +36,7 @@ export default function ParticleRain() {
     };
 
     const initParticles = () => {
-      particlesRef.current = Array.from({ length: 90 }, () => ({
+      particlesRef.current = Array.from({ length: 130 }, () => ({
         x: Math.random() * canvas.width,
         y: Math.random() * canvas.height - canvas.height,
         vy: Math.random() * 1.2 + 0.4,

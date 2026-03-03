@@ -12,18 +12,7 @@ export default function TechStackSection() {
       style={{ paddingTop: '8rem', paddingBottom: '8rem' }}
     >
       <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
-        {/* Section label */}
-        <motion.p
-          className="section-label"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-80px' }}
-          transition={{ duration: 0.6 }}
-        >
-          Skills
-        </motion.p>
-
-        {/* Heading: "The Magic Behind" */}
+        {/* Heading: "The Magic Behind" — centered, no SKILLS label */}
         <motion.h2
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -37,6 +26,7 @@ export default function TechStackSection() {
             letterSpacing: '-0.02em',
             lineHeight: 1,
             color: 'var(--text-primary)',
+            textAlign: 'center',
           }}
         >
           The Magic{' '}
@@ -52,11 +42,12 @@ export default function TechStackSection() {
           </span>
         </motion.h2>
 
-        {/* Tech grid — icon + name cards */}
+        {/* Tech grid — flex wrap so last row centers */}
         <div
           style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(130px, 1fr))',
+            display: 'flex',
+            flexWrap: 'wrap',
+            justifyContent: 'center',
             gap: '1rem',
           }}
         >
@@ -80,6 +71,8 @@ export default function TechStackSection() {
                 backdropFilter: 'blur(10px)',
                 cursor: 'default',
                 transition: 'border-color 0.25s ease, box-shadow 0.25s ease',
+                width: '130px',
+                flexShrink: 0,
               }}
               onMouseEnter={(e) => {
                 (e.currentTarget as HTMLDivElement).style.borderColor = `${item.color}50`;
@@ -90,13 +83,21 @@ export default function TechStackSection() {
                 (e.currentTarget as HTMLDivElement).style.boxShadow = 'none';
               }}
             >
-              {/* Icon */}
-              <div
-                style={{ width: 36, height: 36, flexShrink: 0 }}
-                dangerouslySetInnerHTML={{
-                  __html: techIcons[item.icon] ?? `<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="${item.color}"/></svg>`,
-                }}
-              />
+              {/* Icon — PNG or SVG */}
+              {item.iconType === 'png' ? (
+                <img
+                  src={item.icon}
+                  alt={item.name}
+                  style={{ width: 36, height: 36, objectFit: 'contain', flexShrink: 0 }}
+                />
+              ) : (
+                <div
+                  style={{ width: 36, height: 36, flexShrink: 0 }}
+                  dangerouslySetInnerHTML={{
+                    __html: techIcons[item.icon] ?? `<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="${item.color}"/></svg>`,
+                  }}
+                />
+              )}
               {/* Name */}
               <span
                 style={{

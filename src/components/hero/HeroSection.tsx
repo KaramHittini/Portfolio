@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import SquaresBackground from './AntigravityBackground';
+import AntigravityParticles from './AntigravityParticles';
 import SquareWipe from './SquareWipe';
 import ParticleRain from './ParticleRain';
 
@@ -9,11 +9,23 @@ type Stage = 'intro' | 'wipe' | 'done';
 export default function HeroSection() {
   const [stage, setStage] = useState<Stage>('intro');
 
+  // Progress the animation stages
   useEffect(() => {
-    // Reduced from 2500ms to 1500ms
     const timer = setTimeout(() => setStage('wipe'), 1500);
     return () => clearTimeout(timer);
   }, []);
+
+  // Disable scrolling during intro/wipe animation
+  useEffect(() => {
+    if (stage !== 'done') {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [stage]);
 
   return (
     <>
@@ -28,12 +40,13 @@ export default function HeroSection() {
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              background: '#1a1a1a',
+              background: '#0d0d0d',
               zIndex: 50,
               overflow: 'hidden',
             }}
           >
-            <SquaresBackground direction="diagonal" speed={0.5} />
+            {/* Antigravity particle effect during intro */}
+            <AntigravityParticles />
 
             {/* Hero name */}
             <AnimatePresence>
@@ -56,7 +69,6 @@ export default function HeroSection() {
                       fontFamily: 'var(--font-serif)',
                       fontWeight: 700,
                       color: '#ffffff',
-                      // No glow effect
                       textShadow: 'none',
                     }}
                   >

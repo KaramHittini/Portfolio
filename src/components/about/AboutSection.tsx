@@ -34,7 +34,7 @@ function useShuffleText(text: string, trigger: boolean) {
 export default function AboutSection() {
   const sectionRef = useRef<HTMLElement>(null);
   const quoteRef = useRef<HTMLParagraphElement>(null);
-  const quoteInView = useInView(quoteRef, { once: true, margin: '-100px' });
+  const quoteInView = useInView(quoteRef, { once: true, margin: '-300px' });
   const shuffledQuote = useShuffleText('"If it works don\'t touch it"', quoteInView);
 
   return (
@@ -42,7 +42,7 @@ export default function AboutSection() {
       id="about"
       ref={sectionRef}
       className="section"
-      style={{ paddingTop: '8rem', paddingBottom: '10rem' }}
+      style={{ paddingTop: '4rem', paddingBottom: '10rem' }}
     >
       <div style={{ maxWidth: '900px', margin: '0 auto' }}>
 

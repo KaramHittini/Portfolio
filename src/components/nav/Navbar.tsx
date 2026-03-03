@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const navLinks = [
@@ -12,13 +12,27 @@ export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [hovered, setHovered] = useState(false);
 
+  // Lock scroll while menu is open
+  useEffect(() => {
+    if (menuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [menuOpen]);
+
   const handleNav = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     e.preventDefault();
     setMenuOpen(false);
-    const target = document.querySelector(href);
-    if (target) {
-      target.scrollIntoView({ behavior: 'smooth' });
-    }
+    setTimeout(() => {
+      const target = document.querySelector(href);
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth' });
+      }
+    }, 400);
   };
 
   const toggleMenu = () => setMenuOpen((o) => !o);
@@ -121,13 +135,13 @@ export default function Navbar() {
               position: 'fixed',
               inset: 0,
               zIndex: 150,
-              background: 'rgba(13, 13, 13, 0.97)',
+              background: 'rgba(28, 28, 36, 0.97)',
               backdropFilter: 'blur(20px)',
               display: 'flex',
               flexDirection: 'column',
-              alignItems: 'flex-end',
+              alignItems: 'flex-start',
               justifyContent: 'center',
-              paddingRight: '8rem',
+              paddingLeft: '8rem',
               paddingBottom: '4rem',
             }}
           >
@@ -135,9 +149,9 @@ export default function Navbar() {
               {navLinks.map((link, i) => (
                 <motion.div
                   key={link.href}
-                  initial={{ opacity: 0, x: 60 }}
+                  initial={{ opacity: 0, x: -60 }}
                   animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: 40 }}
+                  exit={{ opacity: 0, x: -40 }}
                   transition={{ duration: 0.4, delay: 0.1 + i * 0.07, ease: [0.76, 0, 0.24, 1] }}
                 >
                   <a
@@ -153,7 +167,7 @@ export default function Navbar() {
                       lineHeight: 1.1,
                       marginBottom: '0.4rem',
                       transition: 'color 0.2s ease',
-                      textAlign: 'right',
+                      textAlign: 'left',
                     }}
                     onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--accent)')}
                     onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--text-primary)')}
@@ -163,23 +177,6 @@ export default function Navbar() {
                 </motion.div>
               ))}
             </nav>
-
-            <motion.p
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.5 }}
-              style={{
-                position: 'absolute',
-                bottom: '3rem',
-                right: '8rem',
-                fontSize: '0.75rem',
-                color: 'var(--text-muted)',
-                letterSpacing: '0.1em',
-                textTransform: 'uppercase',
-              }}
-            >
-              Karam Hittini — Portfolio
-            </motion.p>
           </motion.div>
         )}
       </AnimatePresence>

@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
 
-// Social links with rotating text hover effect
+// Social links
 const socials = [
   { label: 'GitHub', href: 'https://github.com/karamhittini' },
   { label: 'LinkedIn', href: 'https://linkedin.com/in/karamhittini' },
@@ -15,8 +15,28 @@ const footerNavLinks = [
   { label: 'Contact', href: '#contact' },
 ];
 
+function AnimatedArrow({ active }: { active: boolean }) {
+  return (
+    <span
+      style={{
+        display: 'inline-block',
+        marginLeft: '0.35rem',
+        fontSize: '0.8rem',
+        verticalAlign: 'middle',
+        animation: active ? 'arrowLoop 0.6s ease-in-out forwards' : 'none',
+        transform: active ? undefined : 'translate(0, 0)',
+        opacity: 1,
+      }}
+    >
+      ↗
+    </span>
+  );
+}
+
+
 function SocialLink({ label, href }: { label: string; href: string }) {
   const [hovered, setHovered] = useState(false);
+  const lineRef = useRef<HTMLSpanElement>(null);
 
   return (
     <a
@@ -27,32 +47,41 @@ function SocialLink({ label, href }: { label: string; href: string }) {
       onMouseLeave={() => setHovered(false)}
       style={{
         display: 'inline-flex',
-        flexDirection: 'column',
-        overflow: 'hidden',
-        height: '1.1em',
-        fontSize: '0.8rem',
+        alignItems: 'center',
+        position: 'relative',
+        fontSize: '0.85rem',
         fontWeight: 500,
         letterSpacing: '0.05em',
-        color: hovered ? 'var(--text-primary)' : 'var(--text-muted)',
+        color: hovered ? '#ffffff' : 'var(--text-secondary)',
         transition: 'color 0.2s ease',
         cursor: 'inherit',
-        lineHeight: 1.1,
+        textShadow: hovered ? '0 0 20px rgba(137, 41, 255, 0.6)' : 'none',
+        paddingBottom: '2px',
       }}
     >
+      {/* Label text */}
+      <span>{label}</span>
+
+      {/* Animated arrow */}
+      <AnimatedArrow active={hovered} />
+
+      {/* Underline that animates left→right */}
       <motion.span
-        animate={{ y: hovered ? '-100%' : '0%' }}
-        transition={{ duration: 0.25, ease: [0.76, 0, 0.24, 1] }}
-        style={{ display: 'block' }}
-      >
-        {label}
-      </motion.span>
-      <motion.span
-        animate={{ y: hovered ? '-100%' : '0%' }}
-        transition={{ duration: 0.25, ease: [0.76, 0, 0.24, 1] }}
-        style={{ display: 'block', color: 'var(--accent)' }}
-      >
-        {label}
-      </motion.span>
+        ref={lineRef}
+        initial={false}
+        animate={{ scaleX: hovered ? 1 : 0, opacity: hovered ? 1 : 0 }}
+        transition={{ duration: 0.3, ease: [0.76, 0, 0.24, 1] }}
+        style={{
+          position: 'absolute',
+          bottom: 0,
+          left: 0,
+          height: '1px',
+          width: '100%',
+          background: 'linear-gradient(90deg, var(--accent), #C084FC)',
+          transformOrigin: 'left center',
+          display: 'block',
+        }}
+      />
     </a>
   );
 }
@@ -76,16 +105,15 @@ export default function Footer() {
       transition={{ duration: 0.8 }}
       style={{
         borderTop: '1px solid var(--border-subtle)',
-        padding: '4rem 6rem',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        flexWrap: 'wrap',
-        gap: '2rem',
+        padding: '5rem 4rem',
+        display: 'grid',
+        gridTemplateColumns: '1fr auto 1fr',
+        alignItems: 'start',
+        gap: '3rem',
       }}
     >
       {/* Left: copyright + section nav */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '1.2rem' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '1.2rem', justifySelf: 'center' }}>
         <div>
           <p
             style={{
@@ -103,9 +131,9 @@ export default function Footer() {
           </p>
         </div>
 
-        {/* Section nav links */}
-        <div style={{ display: 'flex', gap: '1.2rem', alignItems: 'center', flexWrap: 'wrap' }}>
-          {footerNavLinks.map((link, i) => (
+        {/* Section nav links — stacked vertically */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+          {footerNavLinks.map((link) => (
             <a
               key={link.href}
               href={link.href}
@@ -115,35 +143,32 @@ export default function Footer() {
                 color: 'var(--text-muted)',
                 transition: 'color 0.2s ease',
                 cursor: 'inherit',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '1.2rem',
               }}
               onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--text-primary)')}
               onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--text-muted)')}
             >
-              {i > 0 && (
-                <span style={{ color: 'var(--border-subtle)', marginRight: '-0.6rem', pointerEvents: 'none' }}>
-                  |
-                </span>
-              )}
               {link.label}
             </a>
           ))}
         </div>
       </div>
 
-      {/* Right: social links (text only, separator lines, rotating hover) */}
-      <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center' }}>
-        {socials.map((s, i) => (
-          <div key={s.label} style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
-            {i > 0 && (
-              <span style={{ color: 'var(--border-subtle)', fontSize: '0.8rem', userSelect: 'none' }}>
-                |
-              </span>
-            )}
-            <SocialLink label={s.label} href={s.href} />
-          </div>
+      {/* Center: a decorative dot */}
+      <div
+        style={{
+          width: 6,
+          height: 6,
+          borderRadius: '50%',
+          background: 'var(--accent)',
+          marginTop: '0.6rem',
+          opacity: 0.5,
+        }}
+      />
+
+      {/* Right: social links — stacked vertically, centered */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem', justifySelf: 'center' }}>
+        {socials.map((s) => (
+          <SocialLink key={s.label} label={s.label} href={s.href} />
         ))}
       </div>
     </motion.footer>

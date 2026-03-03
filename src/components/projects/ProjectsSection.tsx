@@ -5,7 +5,6 @@ import { useRef, useEffect } from 'react';
 
 export default function ProjectsSection() {
   const trackRef = useRef<HTMLDivElement>(null);
-  const scrollYRef = useRef(0);
   const xRef = useRef(0);
   const velocityRef = useRef(0);
   const rafRef = useRef<number>(0);
@@ -17,7 +16,8 @@ export default function ProjectsSection() {
       const currentY = window.scrollY;
       const delta = currentY - lastScrollY;
       lastScrollY = currentY;
-      scrollYRef.current = currentY;
+      // Positive delta (scroll down) → shift cards right (positive X)
+      // Negative delta (scroll up) → shift cards left (negative X)
       velocityRef.current += delta * 0.8;
     };
 
@@ -47,7 +47,7 @@ export default function ProjectsSection() {
       className="section"
       style={{
         overflow: 'hidden',
-        paddingTop: '8rem',
+        paddingTop: '2rem',
         paddingBottom: '8rem',
       }}
     >

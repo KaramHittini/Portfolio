@@ -9,11 +9,14 @@ import ContactSection from './components/contact/ContactSection';
 import Footer from './components/shared/Footer';
 import SocialSidebar from './components/shared/SocialSidebar';
 import ClickSpark from './components/shared/ClickSpark';
+import CustomCursor from './components/cursor/CustomCursor';
+import ScrollVelocityTicker from './components/shared/ScrollVelocityTicker';
 
 export default function App() {
   return (
     <>
-      <ClickSpark sparkColor="var(--accent)" sparkCount={8} sparkRadius={22} sparkSize={11}>
+      <CustomCursor />
+      <ClickSpark sparkColor="#8929FF" sparkCount={8} sparkRadius={22} sparkSize={11}>
         <div style={{ backgroundColor: 'var(--bg-base)', minHeight: '100vh' }}>
           {/* Global overlays */}
           <ScrollProgress />
@@ -36,6 +39,7 @@ export default function App() {
           </main>
 
           <Footer />
+          <ScrollVelocityTicker />
         </div>
       </ClickSpark>
     </>
