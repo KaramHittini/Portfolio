@@ -16,7 +16,7 @@ const socials = [
   },
   {
     label: 'Instagram',
-    href: 'https://instagram.com/karamhittini',
+    href: 'https://instagram.com/karam.hittini',
     icon: Instagram,
     color: '#e1306c',
   },

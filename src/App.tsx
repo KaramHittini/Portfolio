@@ -1,31 +1,36 @@
-import './index.css';
-import ScrollProgress from './components/shared/ScrollProgress';
-import Navbar from './components/nav/Navbar';
-import HeroSection from './components/hero/HeroSection';
-import AboutSection from './components/about/AboutSection';
-import ProjectsSection from './components/projects/ProjectsSection';
-import TechStackSection from './components/tech/TechStackSection';
-import ContactSection from './components/contact/ContactSection';
-import Footer from './components/shared/Footer';
-import SocialSidebar from './components/shared/SocialSidebar';
-import ClickSpark from './components/shared/ClickSpark';
-import CustomCursor from './components/cursor/CustomCursor';
-import ScrollVelocityTicker from './components/shared/ScrollVelocityTicker';
+import "./index.css";
+import ScrollProgress from "./components/shared/ScrollProgress";
+import StaggeredNavbar from "./components/nav/StaggeredNavbar";
+import HeroSection from "./components/hero/HeroSection";
+import AboutSection from "./components/about/AboutSection";
+import ProjectsSection from "./components/projects/ProjectsSection";
+import TechStackSection from "./components/tech/TechStackSection";
+import ContactSection from "./components/contact/ContactSection";
+import Footer from "./components/shared/Footer";
+import SocialSidebar from "./components/shared/SocialSidebar";
+import ClickSpark from "./components/shared/ClickSpark";
+import CustomCursor from "./components/cursor/CustomCursor";
+import ScrollVelocityTicker from "./components/shared/ScrollVelocityTicker";
 
 export default function App() {
   return (
     <>
       <CustomCursor />
-      <ClickSpark sparkColor="#8929FF" sparkCount={8} sparkRadius={22} sparkSize={11}>
-        <div style={{ backgroundColor: 'var(--bg-base)', minHeight: '100vh' }}>
+      <ClickSpark
+        sparkColor="#8929FF"
+        sparkCount={8}
+        sparkRadius={22}
+        sparkSize={11}
+      >
+        <div style={{ backgroundColor: "var(--bg-base)", minHeight: "100vh" }}>
           {/* Global overlays */}
           <ScrollProgress />
 
           {/* Fixed social sidebar — bottom left */}
           <SocialSidebar />
 
-          {/* Navigation — hamburger top right */}
-          <Navbar />
+          {/* Navigation — staggered menu */}
+          <StaggeredNavbar />
 
           {/* Hero — handles its own positioning during intro */}
           <HeroSection />
